@@ -3,7 +3,7 @@
 O método de eliminação de Gauss Jordan decompõe uma matriz A em um produto LU de uma
 matriz triangular inferior L e uma matriz triangular superior U. Uma matriz é triangular
 superior se $a_{ij} = 0 \forall i > j$ e triangular inferior se $a_{ij} = 0 \forall i < j$.
-Especificamente, a matriz L guarda os multiplicadores $ l_{ik} = \frac{a_{ik}}{a_{kk}},
+Especificamente, a matriz L guarda os multiplicadores $l_{ik} = \frac{a_{ik}}{a_{kk}}$,
 enquanto a matriz U guarda o resultado das operações sobre A, ou seja, a matriz obtida ao
 final da fase de substituição.
 
@@ -19,10 +19,12 @@ Resolva Ux = y (retrossubstituição)
 
 Tome duas equações com a mesma matriz, mas com lados direitos diferentes:
 
-$
+\[
 Ax = b
+\]
+\[
 Ax' = b'
-$
+\]
 
 Caso fossemos resolver as duas isoladamente, teríamos um custo de $2(f + s)$, onde
 $f$ é o número de operações para fatorar A e $s$ o número de operações para resolver
@@ -34,7 +36,7 @@ determinante de um produto de matrizes é igual ao produto do determinante das m
 e o determinante de uma matriz triangular é o produto dos elementos da diagonal principal. Assim, $det(A) = det(L).det(U) = \prod_{i=0}{n} u_ii$.
 
 Podemos, ainda, utilizar a fatoração para inverter matrizes. Definimos $e_i$ como
-os vetores coordenada padrões de $\mathds{R}^n$. Para cada um deles, resolvemos
+os vetores coordenada padrões de $\Re^n$. Para cada um deles, resolvemos
 $Ax_i = e_i$, ou, equivalentemente, $L(U x_i) = e_i$. O vetor $x_i$ obtido será
 a i-ésima coluna de $A^{-1}$. A inversão toma $\frac{8}{3}n^3$ operações.
 
