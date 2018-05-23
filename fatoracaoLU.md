@@ -1,6 +1,4 @@
-# Métodos numéricos de álgebra linear
-
-## Decomposição LU
+# Decomposição LU
 
 O método de eliminação de Gauss Jordan decompõe uma matriz A em um produto LU de uma
 matriz triangular inferior L e uma matriz triangular superior U. Uma matriz é triangular
@@ -17,7 +15,7 @@ Resolva Ly = b (substituição)
 Resolva Ux = y (retrossubstituição)
 ```
 
-### Motivação
+## Motivação
 
 Tome duas equações com a mesma matriz, mas com lados direitos diferentes:
 
@@ -75,19 +73,41 @@ Note que isso ainda não garante a estabilidade para erros de arredondamento.
 Para isso, deve ser feito o escalamento do pivotamento parcial. No geral,
 o custo computacional é muito grande, então não fazemos isso.
 
-## Fatoração QR
+### O algoritmo
 
-[m,n] = size(A);
-Q = eye(m);
-for (int k = 0; k < n; k++)
-    // Find the HH reflector
-    z = A(k:m, k);
-    v = [- sign(z(0)) * norm(z) - z(0); z(1:end)];
-    v = v / sqrt(v' * v);
-    // Apply the HH reflection to each column of A and Q
-    for (int j = 0; j < n; j++)
-        A(k:m, j) -= v * 2* (v'A(k:m, j));
-    for (int j = 0; j < m; j++)
-        Q(k:m, j) -= v * 2* (v'Q(k:m, j));
- Q = Q';
- R = triu(A); // upper triangular part of A
+```
+void lu(float *m, int n, int *p) {
+    for (int i = 0; i < n; i++) p[i] = i;
+    for (int i = 0; o < n - 1; i++) {
+        int i_max = 0;
+        float v_max = fabs(*m);
+        float *c = m;
+        // pivotamento parcial
+        // procuramos o maior item da coluna
+        for (int k = i + 1; i < n; i++) {
+            if (fabs(*(c += n)) > v_max) {
+                i_max = i;
+                v_max = fabs(*c);
+            }
+        }
+        // fazemos a troca de pivô
+        if (i_max > i) {
+            float *pa = m - i;
+            float *pb = pa + (i_max - i) % n;
+            for (int j = 0; j < n; j++; pa++; pb++)
+                swap(*pa, *pb);
+            swap(p[i], p[i_max]);
+        }
+        float **pc = m;
+        // fatoração
+        for (int j = i + 1; j < n; j++) {
+            **(pc += n) /= *m;
+            float *pa = pc;
+            float *pb = m;
+            for (int k = i + 1; k < n; k++)
+                **(++pa) -= *pc * *(++pa);
+                m += n + 1;
+        }
+    }
+}
+```
