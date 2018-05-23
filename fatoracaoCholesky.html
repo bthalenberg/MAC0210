@@ -749,15 +749,20 @@ pre.editor-colors[mini] .scroll-view {
   </head>
   <body class='markdown-preview'><h1>Decomposição de Cholesky</h1>
 <p>Uma matriz <span class="math"><script type="math/tex">A</script></span> é simétrica se <span class="math"><script type="math/tex">A^T = A</script></span> e definida positiva de <span class="math"><script type="math/tex">x^TAx > 0\:
-\forall x \neq 0</script></span>. A decomposição de tais matrizes é relativamente mais simples do que
+\forall x \neq 0</script></span>. Essas matrizes têm algumas propriedades bastante interessantes,
+como:</p>
+<ul>
+<li>Toda matriz definida positiva é não-singular</li>
+<li>Toda matriz definida positiva tem somente elementos positivos em sua diagonal</li>
+</ul>
+<p>A decomposição de tais matrizes é relativamente mais simples do que
 a decomposição de matrizes comuns, de forma que podemos simplificar o algoritmo da
 decomposição LU. Por exemplo, temos que não é necessário fazer pivotamento para
 estabilizar o algoritmo.</p>
 <p>Considere a decomposição de uma de tais matrizes como <span class="math"><script type="math/tex">A = LU</script></span>. Podemos escrever <span class="math"><script type="math/tex">U</script></span>
 como <span class="math"><script type="math/tex">DU'</script></span>, onde D é sua diagonal, e U’ tem os elementos da diagonal substituídos por
 1s.</p>
-<p>Temos, portanto, que <span class="math"><script type="math/tex">A = LDU'</script></span>. Transpondo, obtemos <span class="math"><script type="math/tex">A = A^T = U'^{T}DL^{T}. No entanto,
-como a decomposição é única, devemos ter $U'^{T} = L</script></span>. Logo,</p>
+<p>Temos, portanto, que <span class="math"><script type="math/tex">A = LDU'</script></span>. Transpondo, obtemos <span class="math"><script type="math/tex">A = A^T = U'^{T}DL^{T}</script></span>. No entanto, como a decomposição é única, devemos ter <span class="math"><script type="math/tex">U'^{T} = L</script></span>. Logo,</p>
 <span class="math"><script type="math/tex; mode=display">A = LDL^T
 </script></span>
 <p>onde L é triangular inferior unitária, ou seja, com elementos da diagonal iguais a 1,
@@ -765,27 +770,31 @@ e D é diagonal com elementos <span class="math"><script type="math/tex">u_{kk}<
 com <span class="math"><script type="math/tex">D^{\frac{1}{2}} = diag{\sqrt{u_{11},...,\sqrt{u_{nn}}}}</script></span>, de forma que</p>
 <span class="math"><script type="math/tex; mode=display">A = GG^T
 </script></span>
-<p>com <span class="math"><script type="math/tex">G = LD^{\frac{1}{2}}</script></span> triangular inferior.</p>
+<p>com <span class="math"><script type="math/tex">G = LD^{\frac{1}{2}}</script></span> triangular inferior. G é chamado fator de Cholesky de A.</p>
 <h2>Motivação</h2>
-<p>O algoritmo para a decomposição de Cholesky necessita cerca de metade do espaço requerido
-pela decomposição LU, por conta da simetria, e cerca de metade dos flops de LU,
-<span class="math"><script type="math/tex">\frac{1}{3}n^3 + O(n^2)</script></span>. Isso pode ser feito porque os cálculos para <span class="math"><script type="math/tex">A = GG^T</script></span>
-podem ser feitos elemento a elemento. Note que isso somente ocorre porque os argumentos
-da raiz quadrada sempre serão positivos no caso de A simétrica positiva definida,
-mas não para matrizes genéricas.</p>
-<h2>Algoritmo</h2>
-<pre class="editor-colors lang-text"><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>//&nbsp;Note&nbsp;que&nbsp;as&nbsp;entradas&nbsp;de&nbsp;A&nbsp;são&nbsp;sobrescritas&nbsp;por&nbsp;G</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>for&nbsp;k&nbsp;=&nbsp;1:n&nbsp;-&nbsp;1</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>a_kk&nbsp;=&nbsp;sqrt(a_kk)</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;k&nbsp;+&nbsp;1:n</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>a_ik&nbsp;=&nbsp;a_ik/a_kk</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;k&nbsp;+&nbsp;1:n</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>for&nbsp;i&nbsp;=&nbsp;j:n</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>a_ij&nbsp;=&nbsp;a_ij&nbsp;-&nbsp;a_ik&nbsp;*&nbsp;a_jk</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>a_nn&nbsp;=&nbsp;sqrt(a_nn)</span></span></span>
-</div></pre></body>
+<p>O algoritmo para a decomposição de Cholesky necessita cerca de metade do espaço requerido pela decomposição LU, por conta da simetria, e cerca de metade dos flops de LU, <span class="math"><script type="math/tex">\frac{1}{3}n^3</script></span>. Isso pode ser feito porque os cálculos para <span class="math"><script type="math/tex">A = GG^T</script></span>
+podem ser feitos elemento a elemento. Note que isso somente ocorre porque os argumentos da raiz quadrada sempre serão positivos no caso de A simétrica positiva definida, mas não para matrizes genéricas.</p>
+<p>Assim como fazemos com a fatoração LU, podemos usar a fatoração <span class="math"><script type="math/tex">GG^T</script></span> para resolver
+equações lineares por substituição e retrossubstituição:</p>
+<pre class="editor-colors lang-text"><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>Fatore&nbsp;A&nbsp;=&nbsp;RR^T</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>R^Ty&nbsp;=&nbsp;b&nbsp;(substituição)</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>Rx&nbsp;=&nbsp;y&nbsp;(retrossubstituição)</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;</span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>##&nbsp;Algoritmo</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;</span></span>
+</div></pre>
+<p>// Note que as entradas de A são sobrescritas por G
+for k = 1:n - 1
+a_kk = sqrt(a_kk)
+for i = k + 1:n
+a_ik = a_ik/a_kk
+end
+for j = k + 1:n
+for i = j:n
+a_ij = a_ij - a_ik * a_jk
+end
+end
+end
+a_nn = sqrt(a_nn)</p>
+<pre class="editor-colors lang-text"></pre></body>
 </html>

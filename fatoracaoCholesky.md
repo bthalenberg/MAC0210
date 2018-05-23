@@ -1,7 +1,13 @@
 # Decomposição de Cholesky
 
 Uma matriz $A$ é simétrica se $A^T = A$ e definida positiva de $x^TAx > 0\:
-\forall x \neq 0$. A decomposição de tais matrizes é relativamente mais simples do que
+\forall x \neq 0$. Essas matrizes têm algumas propriedades bastante interessantes,
+como:
+
+* Toda matriz definida positiva é não-singular
+* Toda matriz definida positiva tem somente elementos positivos em sua diagonal
+
+A decomposição de tais matrizes é relativamente mais simples do que
 a decomposição de matrizes comuns, de forma que podemos simplificar o algoritmo da
 decomposição LU. Por exemplo, temos que não é necessário fazer pivotamento para
 estabilizar o algoritmo.
@@ -10,8 +16,7 @@ Considere a decomposição de uma de tais matrizes como $A = LU$. Podemos escrev
 como $DU'$, onde D é sua diagonal, e U' tem os elementos da diagonal substituídos por
 1s.
 
-Temos, portanto, que $A = LDU'$. Transpondo, obtemos $A = A^T = U'^{T}DL^{T}. No entanto,
-como a decomposição é única, devemos ter $U'^{T} = L$. Logo,
+Temos, portanto, que $A = LDU'$. Transpondo, obtemos $A = A^T = U'^{T}DL^{T}$. No entanto, como a decomposição é única, devemos ter $U'^{T} = L$. Logo,
 
 \[
 A = LDL^T
@@ -25,16 +30,20 @@ com $D^{\frac{1}{2}} = diag{\sqrt{u_{11},...,\sqrt{u_{nn}}}}$, de forma que
 A = GG^T
 \]
 
-com $G = LD^{\frac{1}{2}}$ triangular inferior.
+com $G = LD^{\frac{1}{2}}$ triangular inferior. G é chamado fator de Cholesky de A.
 
 ## Motivação
 
-O algoritmo para a decomposição de Cholesky necessita cerca de metade do espaço requerido
-pela decomposição LU, por conta da simetria, e cerca de metade dos flops de LU,
-$\frac{1}{3}n^3 + O(n^2)$. Isso pode ser feito porque os cálculos para $A = GG^T$
-podem ser feitos elemento a elemento. Note que isso somente ocorre porque os argumentos
-da raiz quadrada sempre serão positivos no caso de A simétrica positiva definida,
-mas não para matrizes genéricas.
+O algoritmo para a decomposição de Cholesky necessita cerca de metade do espaço requerido pela decomposição LU, por conta da simetria, e cerca de metade dos flops de LU, $\frac{1}{3}n^3$. Isso pode ser feito porque os cálculos para $A = GG^T$
+podem ser feitos elemento a elemento. Note que isso somente ocorre porque os argumentos da raiz quadrada sempre serão positivos no caso de A simétrica positiva definida, mas não para matrizes genéricas.
+
+Assim como fazemos com a fatoração LU, podemos usar a fatoração $GG^T$ para resolver
+equações lineares por substituição e retrossubstituição:
+
+```
+Fatore A = RR^T
+R^Ty = b (substituição)
+Rx = y (retrossubstituição)
 
 ## Algoritmo
 
