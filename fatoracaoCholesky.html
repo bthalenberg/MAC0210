@@ -767,7 +767,7 @@ como <span class="math"><script type="math/tex">DU'</script></span>, onde D é s
 </script></span>
 <p>onde L é triangular inferior unitária, ou seja, com elementos da diagonal iguais a 1,
 e D é diagonal com elementos <span class="math"><script type="math/tex">u_{kk}</script></span>. Também podemos escrever <span class="math"><script type="math/tex">D = D^{\frac{1}{2}}D^{\frac{1}{2}}</script></span>,
-com <span class="math"><script type="math/tex">D^{\frac{1}{2}} = diag{\sqrt{u_{11},...,\sqrt{u_{nn}}}}</script></span>, de forma que</p>
+com <span class="math"><script type="math/tex">D^{\frac{1}{2}} = diag({\sqrt{u_{11}},...,\sqrt{u_{nn}}})</script></span>, de forma que</p>
 <span class="math"><script type="math/tex; mode=display">A = GG^T
 </script></span>
 <p>com <span class="math"><script type="math/tex">G = LD^{\frac{1}{2}}</script></span> triangular inferior. G é chamado fator de Cholesky de A.</p>
@@ -779,22 +779,20 @@ equações lineares por substituição e retrossubstituição:</p>
 <pre class="editor-colors lang-text"><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>Fatore&nbsp;A&nbsp;=&nbsp;RR^T</span></span></span>
 </div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>R^Ty&nbsp;=&nbsp;b&nbsp;(substituição)</span></span></span>
 </div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>Rx&nbsp;=&nbsp;y&nbsp;(retrossubstituição)</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;</span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>##&nbsp;Algoritmo</span></span></span>
-</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;</span></span>
 </div></pre>
-<p>// Note que as entradas de A são sobrescritas por G
-for k = 1:n - 1
-a_kk = sqrt(a_kk)
-for i = k + 1:n
-a_ik = a_ik/a_kk
-end
-for j = k + 1:n
-for i = j:n
-a_ij = a_ij - a_ik * a_jk
-end
-end
-end
-a_nn = sqrt(a_nn)</p>
-<pre class="editor-colors lang-text"></pre></body>
+<h2>Algoritmo</h2>
+<pre class="editor-colors lang-text"><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>//&nbsp;Note&nbsp;que&nbsp;as&nbsp;entradas&nbsp;de&nbsp;A&nbsp;são&nbsp;sobrescritas&nbsp;por&nbsp;G</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>for&nbsp;k&nbsp;=&nbsp;1:n&nbsp;-&nbsp;1</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>a_kk&nbsp;=&nbsp;sqrt(a_kk)</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;i&nbsp;=&nbsp;k&nbsp;+&nbsp;1:n</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>a_ik&nbsp;=&nbsp;a_ik/a_kk</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;k&nbsp;+&nbsp;1:n</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>for&nbsp;i&nbsp;=&nbsp;j:n</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>a_ij&nbsp;=&nbsp;a_ij&nbsp;-&nbsp;a_ik&nbsp;*&nbsp;a_jk</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>a_nn&nbsp;=&nbsp;sqrt(a_nn)</span></span></span>
+</div></pre></body>
 </html>

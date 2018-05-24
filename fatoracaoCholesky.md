@@ -24,7 +24,7 @@ A = LDL^T
 
 onde L é triangular inferior unitária, ou seja, com elementos da diagonal iguais a 1,
  e D é diagonal com elementos $u_{kk}$. Também podemos escrever $D = D^{\frac{1}{2}}D^{\frac{1}{2}}$,
-com $D^{\frac{1}{2}} = diag{\sqrt{u_{11},...,\sqrt{u_{nn}}}}$, de forma que
+com $D^{\frac{1}{2}} = diag({\sqrt{u_{11}},...,\sqrt{u_{nn}}})$, de forma que
 
 \[
 A = GG^T
@@ -44,6 +44,7 @@ equações lineares por substituição e retrossubstituição:
 Fatore A = RR^T
 R^Ty = b (substituição)
 Rx = y (retrossubstituição)
+```
 
 ## Algoritmo
 
