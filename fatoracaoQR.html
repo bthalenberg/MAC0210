@@ -2,7 +2,7 @@
 <html>
   <head>
       <meta charset="utf-8" />
-      <title>erros</title>
+      <title>fatoracaoQR</title>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     jax: ["input/TeX","output/HTML-CSS"],
@@ -747,31 +747,61 @@ pre.editor-colors[mini] .scroll-view {
 }
 </style>
   </head>
-  <body class='markdown-preview'><h1>Cálculo de erros</h1>
-<p>Suponha que, usando um algoritmo, computemos uma solução aproximada <span class="math"><script type="math/tex">\hat{x}</script></span>. Se <span class="math"><script type="math/tex">x</script></span> for
-a solução exata, gostaríamos de avaliar o erro absoluto <span class="math"><script type="math/tex">\|x - \hat{x}\|</script></span>, ou o erro relativo</p>
-<span class="math"><script type="math/tex; mode=display">\frac{\| x - \hat{x}\|}{\|x\|}.
+  <body class='markdown-preview'><h1>Fatoração QR</h1>
+<p>A fatoração QR decompõe uma matriz A em uma matriz Q com colunas ortonormais e uma
+matriz R triangular superior. A deve ter colunas linearmente independentes. Caso
+A seja quadrada, então <span class="math"><script type="math/tex">Q^{-1} = Q^T</script></span>.</p>
+<p>Para quaisquer matriz ortogonal <span class="math"><script type="math/tex">P</script></span> e vetor <span class="math"><script type="math/tex">w</script></span> podemos escrever</p>
+<span class="math"><script type="math/tex; mode=display">\|b - Aw\| = \|Pb - PAw\|.
 </script></span>
-<p>Obviamente, se soubessemos esse erro, saberíamos também a resposta exata. Assim, buscamos
-um limitante superior para o erro por meio de quantidades que podemos calcular diretamente.
-Uma dessas opções é o <em>residual</em>:</p>
-<span class="math"><script type="math/tex; mode=display">\hat{r} = b - A\hat{x}
+<p>Nosso objetivo é obter uma transformação tal que</p>
+<span class="math"><script type="math/tex; mode=display">A = Q \begin{pmatrix} R \\ 0 \end{pmatrix}
 </script></span>
-<p>A partir do residual, podemos dizer que</p>
-<span class="math"><script type="math/tex; mode=display">
-\frac{\| x - \hat{x}\|}{\|x\|}
-\leq
-\|A\|\|A^{-1}\|  \frac{\|\hat{r}\|}{\|b\|}
-</script></span>
-<p>Chamamos <span class="math"><script type="math/tex">\|A\|\|A^{-1}\|</script></span> de número de condição da matriz A, e denotamos <span class="math"><script type="math/tex">\kappa(A)</script></span>.
-Ele está relacionado à proximidade da matriz A à singularidade, i.e., o quão próxima
-A está de ter um determinante nulo.</p>
-<p>Um algoritmo estável é responsável por produzir um residual pequeno. Isso gera erros
-aceitavelmente pequenos se a solução do problema é bem condicionada, i.e., se <span class="math"><script type="math/tex">\kappa(A)</script></span>
-não for grande demais. Note que pequeno e grande dependem das circunstâncias do problema
-(EP do Mascarenhas vs. enviar um foguete pra Lua), mas o conceito qualitativo é geral.</p>
-<hr>
-<p>Uma observação útil: matrizes ortogonais são perfeitamente condicionais. Assim, transformações
-ortogonais são especialmente estáveis :-)</p>
-<hr></body>
+<h2>Motivação</h2>
+<p>Esse tipo de fatoração é especialmente útil para resolver o problema dos mínimos
+quadrados (não me pergunte como e nem por quê), assim como o algoritmo de SVD. O método das equações normais, da forma <span class="math"><script type="math/tex">B = A^TA</script></span>, que usa a fatoração de Cholesky, pode ter <span class="math"><script type="math/tex">\kappa(A)^2</script></span>. A intenção do algoritmo QR, então, é minimizar esse erro,
+obtendo <span class="math"><script type="math/tex">\kappa(A)</script></span>. Ele realiza mais operações – se implementado de maneira eficiente, faz em média <span class="math"><script type="math/tex">2mn^2 - \frac{2}{3}n^3</script></span> flops – mas é mais robusto.</p>
+<h2>A transformação Householder</h2>
+<p>A maneira mais fácil de realizar isso é a ortogonalização de Gram Schmidt, que já
+vimos em Álgebra Linear. Obviamente, como nada na vida é simples, não é esse o método
+que precisamos saber para a prova. Vamos usar a transformação Householder, porque
+aparentemente ela é melhor para propósitos gerais e a mais semelhante à fatoração LU.</p>
+<p>Suponha que dado um vetor z, quiséssemos encontrar uma transformação ortogonal que
+zerasse todas as entradas do vetor exceto pela primeira. Uma transformação possível é
+<span class="math"><script type="math/tex">Pz = z - 2uu^Tz</script></span>, onde u é um vetor unitário e I é uma matriz identidade. P, na sua
+forma geal, <span class="math"><script type="math/tex">P = I - 2uu^T</script></span> é chamado de refletor, uma vez que <span class="math"><script type="math/tex">Pu = -u</script></span>. No caso,
+o vetor unitário será na direção de <span class="math"><script type="math/tex">z \pm \|z\|e_1</script></span>. O sinal será selecionado de acordo
+com <span class="math"><script type="math/tex">z_1</script></span>, para reduzir a possibilidade de erros de cancelamento.</p>
+<p>Esse processo pode ser aplicado e extendido de maneira análoga à derivação da fatoração LU.</p>
+<h2>O algoritmo</h2>
+<p>Para realizar a fatoração QR, procedemos da seguinte maneira:</p>
+<ol>
+<li>Aplique a reflexão <span class="math"><script type="math/tex">P^{(1)}</script></span> que transforma a primeira coluna de A em um múltiplo de <span class="math"><script type="math/tex">e_1</script></span>, usando a primeira coluna de A no lugar de z descrito acima.</li>
+<li>Em seguida, aplique uma transformação semelhante na segunda coluna de <span class="math"><script type="math/tex">P^{(1)}A</script></span>,
+zerando os elementos abaixo da diagonal.</li>
+<li>Continue realizando transformações análogas até obter uma matriz triangular superior.</li>
+</ol>
+<p>Em MatLab/Octave porque não sou obrigada e muito menos paga pra isso:</p>
+<pre class="editor-colors lang-text"><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>[m,n]&nbsp;=&nbsp;size(A);</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>Q&nbsp;=&nbsp;eye(m);</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>%&nbsp;lembrando&nbsp;que&nbsp;em&nbsp;MatLab&nbsp;índices&nbsp;começam&nbsp;em&nbsp;1</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>for&nbsp;k&nbsp;=&nbsp;1:n</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>//&nbsp;Find&nbsp;the&nbsp;HH&nbsp;reflector</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;=&nbsp;A(k:m,&nbsp;k);</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;v&nbsp;=&nbsp;[-&nbsp;sign(z(1))&nbsp;*&nbsp;norm(z)&nbsp;-&nbsp;z(1);&nbsp;z(2:end)];</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;v&nbsp;=&nbsp;v&nbsp;/&nbsp;sqrt(v&#39;&nbsp;*&nbsp;v);</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Apply&nbsp;the&nbsp;HH&nbsp;reflection&nbsp;to&nbsp;each&nbsp;column&nbsp;of&nbsp;A&nbsp;and&nbsp;Q</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:n</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>A(k:m,&nbsp;j)&nbsp;-=&nbsp;v&nbsp;*&nbsp;2*&nbsp;(v&#39;A(k:m,&nbsp;j));</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;j&nbsp;=&nbsp;1:m</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>Q(k:m,&nbsp;j)&nbsp;-=&nbsp;v&nbsp;*&nbsp;2*&nbsp;(v&#39;Q(k:m,&nbsp;j));</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span>&nbsp;</span><span class="syntax--meta syntax--paragraph syntax--text"><span>end</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;Q&nbsp;=&nbsp;Q&#39;;</span></span></span>
+</div><div class="line"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>&nbsp;R&nbsp;=&nbsp;triu(A);&nbsp;//&nbsp;upper&nbsp;triangular&nbsp;part&nbsp;of&nbsp;A</span></span></span>
+</div></pre>
+<p>A fatoração QR é mais estável do que a fatoração de Cholesky, o que é importante
+quando as colunas são ‘quase’ linearmente dependentes. Por outro lado, ela é
+duas vezes mais lenta.</p></body>
 </html>

@@ -1,7 +1,7 @@
 # Cálculo de erros
 
 Suponha que, usando um algoritmo, computemos uma solução aproximada $\hat{x}$. Se $x$ for
-a solução exata, gostaríamos de avaliar o erro absoluto $\|x - \hat{x}\|, ou o erro relativo
+a solução exata, gostaríamos de avaliar o erro absoluto $\|x - \hat{x}\|$, ou o erro relativo
 
 \[
 \frac{\| x - \hat{x}\|}{\|x\|}.
