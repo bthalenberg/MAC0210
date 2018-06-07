@@ -73,3 +73,47 @@ for k = 1:n
 A fatoração QR é mais estável do que a fatoração de Cholesky, o que é importante
 quando as colunas são 'quase' linearmente dependentes. Por outro lado, ela é
 duas vezes mais lenta.
+
+Código em Java (da biblioteca Jama):
+```
+public QRDecomposition (Matrix A) {
+      // Initialize.
+      QR = A.getArrayCopy();
+      m = A.getRowDimension();
+      n = A.getColumnDimension();
+      Rdiag = new double[n];
+
+      // Main loop.
+      for (int k = 0; k < n; k++) {
+         // Compute 2-norm of k-th column without under/overflow.
+         double nrm = 0;
+         for (int i = k; i < m; i++) {
+            nrm = Maths.hypot(nrm,QR[i][k]);
+         }
+
+         if (nrm != 0.0) {
+            // Form k-th Householder vector.
+            if (QR[k][k] < 0) {
+               nrm = -nrm;
+            }
+            for (int i = k; i < m; i++) {
+               QR[i][k] /= nrm;
+            }
+            QR[k][k] += 1.0;
+
+            // Apply transformation to remaining columns.
+            for (int j = k+1; j < n; j++) {
+               double s = 0.0; 
+               for (int i = k; i < m; i++) {
+                  s += QR[i][k]*QR[i][j];
+               }
+               s = -s/QR[k][k];
+               for (int i = k; i < m; i++) {
+                  QR[i][j] += s*QR[i][k];
+               }
+            }
+         }
+         Rdiag[k] = -nrm;
+      }
+   }
+```

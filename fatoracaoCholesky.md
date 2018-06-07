@@ -37,16 +37,20 @@ com $G = LD^{\frac{1}{2}}$ triangular inferior. G é chamado fator de Cholesky d
 O algoritmo para a decomposição de Cholesky necessita cerca de metade do espaço requerido pela decomposição LU, por conta da simetria, e cerca de metade dos flops de LU, $\frac{1}{3}n^3$. Isso pode ser feito porque os cálculos para $A = GG^T$
 podem ser feitos elemento a elemento. Note que isso somente ocorre porque os argumentos da raiz quadrada sempre serão positivos no caso de A simétrica positiva definida, mas não para matrizes genéricas.
 
+No caso de uma matriz esparsa
+
 Assim como fazemos com a fatoração LU, podemos usar a fatoração $GG^T$ para resolver
 equações lineares por substituição e retrossubstituição:
 
 ```
 Fatore A = RR^T
-R^Ty = b (substituição)
-Rx = y (retrossubstituição)
+Ry = b (substituição)
+R^Tx = y (retrossubstituição)
 ```
 
 ## Algoritmo
+
+Em pseudocódigo:
 
 ```
 // Note que as entradas de A são sobrescritas por G
@@ -62,4 +66,35 @@ for k = 1:n - 1
     end
 end
 a_nn = sqrt(a_nn)
+```
+
+Em Java (autoria Sedgewick e Wayne):
+```
+// return Cholesky factor L of psd matrix A = L L^T
+    public static double[][] cholesky(double[][] A) {
+        if (!isSquare(A)) {
+            throw new RuntimeException("Matrix is not square");
+        }
+        if (!isSymmetric(A)) {
+            throw new RuntimeException("Matrix is not symmetric");
+        }
+
+        int N  = A.length;
+        double[][] L = new double[N][N];
+
+        for (int i = 0; i < N; i++)  {
+            for (int j = 0; j <= i; j++) {
+                double sum = 0.0;
+                for (int k = 0; k < j; k++) {
+                    sum += L[i][k] * L[j][k];
+                }
+                if (i == j) L[i][i] = Math.sqrt(A[i][i] - sum);
+                else        L[i][j] = 1.0 / L[j][j] * (A[i][j] - sum);
+            }
+            if (L[i][i] <= 0) {
+                throw new RuntimeException("Matrix not positive definite");
+            }
+        }
+        return L;
+    }
 ```

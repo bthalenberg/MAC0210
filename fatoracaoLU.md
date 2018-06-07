@@ -33,7 +33,11 @@ Se $f \gg s$, resolvemos duas equações pelo custo de uma.
 
 A decomposição LU também encontra aplicações na resolução de determinantes, pois o
 determinante de um produto de matrizes é igual ao produto do determinante das matrizes,
-e o determinante de uma matriz triangular é o produto dos elementos da diagonal principal. Assim, $det(A) = det(L).det(U) = \prod_{i=0}{n} u_ii$.
+e o determinante de uma matriz triangular é o produto dos elementos da diagonal principal. Assim, $det(A) = det(L).det(U) = \pm \prod_{i=0}{n} u_ii$. Para obter o sinal do 
+determinante, basta contar, durante o processo de fatoração,
+quantas pivotações foram necessárias. Caso seja par, det(P) = 1. Caso contrário, det(P) = -1. **A fatoração PA = LU é o 
+algoritmo mais eficiente para calcular o determinante de uma
+matriz quadrada**.
 
 Podemos, ainda, utilizar a fatoração para inverter matrizes. Definimos $e_i$ como
 os vetores coordenada padrões de $\Re^n$. Para cada um deles, resolvemos

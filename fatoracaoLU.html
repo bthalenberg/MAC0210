@@ -771,7 +771,11 @@ o sistema. Ao fatorar A de maneira aproveitável para ambas, temos um custo de <
 Se <span class="math"><script type="math/tex">f \gg s</script></span>, resolvemos duas equações pelo custo de uma.</p>
 <p>A decomposição LU também encontra aplicações na resolução de determinantes, pois o
 determinante de um produto de matrizes é igual ao produto do determinante das matrizes,
-e o determinante de uma matriz triangular é o produto dos elementos da diagonal principal. Assim, <span class="math"><script type="math/tex">det(A) = det(L).det(U) = \prod_{i=0}{n} u_ii</script></span>.</p>
+e o determinante de uma matriz triangular é o produto dos elementos da diagonal principal. Assim, <span class="math"><script type="math/tex">det(A) = det(L).det(U) = \pm \prod_{i=0}{n} u_ii</script></span>. Para obter o sinal do
+determinante, basta contar, durante o processo de fatoração,
+quantas pivotações foram necessárias. Caso seja par, det§ = 1. Caso contrário, det§ = -1. <strong>A fatoração PA = LU é o
+algoritmo mais eficiente para calcular o determinante de uma
+matriz quadrada</strong>.</p>
 <p>Podemos, ainda, utilizar a fatoração para inverter matrizes. Definimos <span class="math"><script type="math/tex">e_i</script></span> como
 os vetores coordenada padrões de <span class="math"><script type="math/tex">\Re^n</script></span>. Para cada um deles, resolvemos
 <span class="math"><script type="math/tex">Ax_i = e_i</script></span>, ou, equivalentemente, <span class="math"><script type="math/tex">L(U x_i) = e_i</script></span>. O vetor <span class="math"><script type="math/tex">x_i</script></span> obtido será
